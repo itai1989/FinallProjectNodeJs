@@ -52,6 +52,27 @@ async function deleteUser(req, res, next) {
   }
 }
 
+async function updateUser(req, res, next) {
+  const id = req.params.user_id;
+  const name = req.body.name;
 
+  try {
+      const [user] = await pool.query("SELECT * FROM users WHERE id = ?", [id]);
+      if (user.length === 0) {
+          return res.status(404).json({ message: "המשתמש לא נמצא" });
+      }
 
-module.exports = { getUsers, addUser, deleteUser };
+      await pool.query("UPDATE users SET name = ? WHERE id = ?", [name, id]);
+
+      res.updatedUser = {
+          message: "המשתמש עודכן בהצלחה",
+          user_id: id
+      };
+
+      next();
+  } catch (error) {
+      res.status(500).json({ message: "שגיאת שרת", error: error.message });
+  }
+}
+
+module.exports = { getUsers, addUser, deleteUser, updateUser };
