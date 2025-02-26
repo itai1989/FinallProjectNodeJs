@@ -1,6 +1,7 @@
 const pool = require("../db");
 
 async function measure(req, res, next) {
+    const id = req.params.user_id;
     
     try {
         const [rows] = await pool.query("SELECT * FROM measurements WHERE user_id = ?", [id]);
