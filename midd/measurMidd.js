@@ -17,4 +17,25 @@ async function measure(req, res, next) {
     }
 }
 
-module.exports = measure;
+
+async function addMeasure(req, res, next) {
+    const { user_id, lowValue, highValue, pulse } = req.body;
+
+    try {
+        const [result] = await pool.query(
+            "INSERT INTO measurements (user_id, time, lowValue, highValue, pulse) VALUES (?, NOW(), ?, ?, ?)",
+            [user_id, lowValue, highValue, pulse]
+        );
+
+        res.newMeasurement = {
+            message: "המדידה נוספה בהצלחה",
+            measurement_id: result.insertId
+        };
+
+        next(); 
+    } catch (error) {
+        res.status(500).json({ message: "שגיאת שרת", error: error.message });
+    }
+}
+
+module.exports = {measure,addMeasure};

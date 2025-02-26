@@ -1,12 +1,14 @@
 const express = require('express');
 const routs = express.Router();
-const measurMidd = require('../midd/measurMidd');
+const Midd = require('../midd/measurMidd');
 
 
-routs.get('/:user_id',measurMidd,(req,res)=>{
+routs.get('/:user_id',Midd.measure,(req,res)=>{
     res.status(200).json(res.measurements);
 })
 
-
+routs.post('/', Midd.addMeasure, (req, res) => {
+    res.status(201).json(res.newMeasurement);
+});
 
 module.exports = routs;
