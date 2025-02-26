@@ -10,4 +10,7 @@ routs.post('/', usersMidd.addUser, (req, res) => {
     res.status(201).json(res.newUser);
 });
 
+routs.delete('/:user_id', usersMidd.deleteUser, (req, res) => {
+    res.status(200).json(res.deletedUser);
+});
 module.exports = routs;
