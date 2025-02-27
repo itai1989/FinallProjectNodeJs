@@ -1,9 +1,10 @@
 const express = require('express');
 const routs = express.Router();
+const userMidd = require('../midd/usersMidd');
 
 
-routs.get('/', (req, res) => {
-    res.render('main');
+routs.get('/', userMidd.getUsers,(req, res) => {
+    res.render('main',{users: res.users});
 });
 
 
