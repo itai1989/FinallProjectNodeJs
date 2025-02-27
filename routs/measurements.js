@@ -3,7 +3,7 @@ const routs = express.Router();
 const Midd = require('../midd/measurMidd');
 
 
-routs.get('/:user_id',Midd.measure,(req,res)=>{
+routs.get('/:user_id',Midd.getMeasure,(req,res)=>{
     res.status(200).json(res.measurements);
 })
 

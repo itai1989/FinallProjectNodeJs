@@ -1,6 +1,6 @@
 const pool = require("../db");
 
-async function measure(req, res, next) {
+async function getMeasure(req, res, next) {
     const id = req.params.user_id;
     
     try {
@@ -38,4 +38,4 @@ async function addMeasure(req, res, next) {
     }
 }
 
-module.exports = {measure,addMeasure};
+module.exports = {getMeasure,addMeasure};
