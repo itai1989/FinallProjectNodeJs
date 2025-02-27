@@ -11,4 +11,8 @@ routs.get('/history/:user_id', (req, res) => {
     res.render('history', { user_id: req.params.user_id });
 });
 
+routs.get('/summary', (req, res) => {
+    res.render('usersSummary'); 
+});
+
 module.exports = routs;

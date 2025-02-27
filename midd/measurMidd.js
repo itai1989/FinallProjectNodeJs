@@ -89,4 +89,48 @@ async function getHistory(req, res, next) {
     }
 }
 
-module.exports = {getMeasure,addMeasure, getHistory};
+async function getUsersSummary(req, res, next) {
+    let { month, year } = req.body;
+
+    try {
+        if (!month || !year) {
+            return res.status(400).json({ message: "חובה לספק חודש ושנה" });
+        }
+
+        const start_date = `${year}-${month}-01 00:00:00`;
+        const end_date = `${year}-${month}-31 23:59:59`;
+
+        const [usersSummary] = await pool.query(
+            `WITH avg_values AS (
+                SELECT user_id, 
+                       IFNULL(AVG(lowValue), 0) AS avgLow, 
+                       IFNULL(AVG(highValue), 0) AS avgHigh, 
+                       IFNULL(AVG(pulse), 0) AS avgPulse
+                FROM measurements 
+                WHERE time BETWEEN ? AND ?
+                GROUP BY user_id
+            )
+            SELECT u.id AS user_id, u.name, 
+                   IFNULL(av.avgLow, 0) AS avgLow,
+                   IFNULL(av.avgHigh, 0) AS avgHigh,
+                   IFNULL(av.avgPulse, 0) AS avgPulse,
+                   COUNT(DISTINCT CASE WHEN m.highValue > av.avgHigh * 1.2 THEN m.id END) AS highOutliers,
+                   COUNT(DISTINCT CASE WHEN m.lowValue < av.avgLow * 0.8 THEN m.id END) AS lowOutliers,
+                   COUNT(DISTINCT CASE WHEN m.pulse > av.avgPulse * 1.2 THEN m.id END) AS pulseHighOutliers,
+                   COUNT(DISTINCT CASE WHEN m.pulse < av.avgPulse * 0.8 THEN m.id END) AS pulseLowOutliers
+            FROM users u
+            LEFT JOIN avg_values av ON u.id = av.user_id
+            LEFT JOIN measurements m ON u.id = m.user_id AND m.time BETWEEN ? AND ?
+            GROUP BY u.id, u.name, av.avgLow, av.avgHigh, av.avgPulse;`,
+            [start_date, end_date, start_date, end_date]
+        );
+
+        res.locals.usersSummary = usersSummary;
+        next();
+    } catch (error) {
+        console.error("Error fetching users summary:", error);
+        res.status(500).json({ message: "שגיאת שרת", error: error.message });
+    }
+}
+
+module.exports = {getMeasure,addMeasure, getHistory, getUsersSummary};

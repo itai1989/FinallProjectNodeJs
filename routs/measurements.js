@@ -16,4 +16,8 @@ routs.post('/history/:user_id', Midd.getHistory, (req, res) => {
     res.json({ measurements, avgHigh });
 });
 
+routs.post('/summary', Midd.getUsersSummary, (req, res) => {
+    res.json(res.locals.usersSummary);
+});
+
 module.exports = routs;

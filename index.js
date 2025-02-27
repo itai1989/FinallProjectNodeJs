@@ -1,9 +1,9 @@
 const express = require('express');
 const app = express();
 const port = 5050;
-app.use(express.json());
+app.use(express.json()); 
 app.set('view engine', 'ejs');
-app.set('views', __dirname + '/views');
+app.set('views', __dirname + '/views'); 
 
 app.listen(port,()=>{
     console.log(`running on http://localhost:${port}`);    
