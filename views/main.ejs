@@ -9,7 +9,7 @@
       <option value="<%= user.id %>"><%= user.name %></option>
     <% }) %>
   </select>
-
+  <button onclick="goToHistory()">🔍 צפה בהיסטוריית מדידות</button>
   <h3>הוספת מדידה חדשה</h3>
   <form id="measurementForm" onsubmit="submitMeasurement(event)">
     <label>תאריך: <input type="date" id="date" required></label>
@@ -21,6 +21,13 @@
 </div>
 
 <script>
+    function goToHistory() {
+    const userId = document.getElementById('selectUser').value;
+    if (!userId) return alert("בחר מטופל קודם!");
+    
+    window.location.href = `/pages/history/${userId}`;
+  }
+
   async function submitMeasurement(event) {
     event.preventDefault();
 
