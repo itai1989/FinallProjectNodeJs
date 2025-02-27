@@ -4,13 +4,49 @@
   <h2>בחר מטופל</h2>
   
   <select name="user" id="selectUser">
+    <option value="">בחר משתמש</option>
     <% users.forEach(user => { %>
       <option value="<%= user.id %>"><%= user.name %></option>
     <% }) %>
   </select>
 
-  <label for=""><input type="text" /></label>
-  <label for=""><input type="text" /></label>
-  <label for=""><input type="text" /></label>
+  <h3>הוספת מדידה חדשה</h3>
+  <form id="measurementForm" onsubmit="submitMeasurement(event)">
+    <label>תאריך: <input type="date" id="date" required></label>
+    <label>ערך נמוך: <input type="number" id="lowValue" required></label>
+    <label>ערך גבוה: <input type="number" id="highValue" required></label>
+    <label>דופק: <input type="number" id="pulse" required></label>
+    <button type="submit">שלח מדידה</button>
+  </form>
 </div>
+
+<script>
+  async function submitMeasurement(event) {
+    event.preventDefault();
+
+    const userId = document.getElementById('selectUser').value;
+    if (!userId) return alert("בחר מטופל קודם!");
+
+    const date = document.getElementById('date').value;
+    const lowValue = document.getElementById('lowValue').value;
+    const highValue = document.getElementById('highValue').value;
+    const pulse = document.getElementById('pulse').value;
+
+    try {
+      const res = await fetch('/measurements', {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_id: userId, date, lowValue, highValue, pulse })
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message);
+
+      alert("המדידה נוספה בהצלחה!");
+    } catch (error) {
+      alert(error.message);
+    }
+  }
+</script>
+
 <%- include('bottom') %>

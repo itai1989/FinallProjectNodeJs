@@ -17,14 +17,13 @@ async function getMeasure(req, res, next) {
     }
 }
 
-
 async function addMeasure(req, res, next) {
-    const { user_id, lowValue, highValue, pulse } = req.body;
+    const { user_id, date, lowValue, highValue, pulse } = req.body;
 
     try {
         const [result] = await pool.query(
-            "INSERT INTO measurements (user_id, time, lowValue, highValue, pulse) VALUES (?, NOW(), ?, ?, ?)",
-            [user_id, lowValue, highValue, pulse]
+            "INSERT INTO measurements (user_id, time, lowValue, highValue, pulse) VALUES (?, ?, ?, ?, ?)",
+            [user_id, date, lowValue, highValue, pulse]
         );
 
         res.newMeasurement = {
