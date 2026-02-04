@@ -11,9 +11,6 @@ app.use(express.static('public'));
 
 setupSwagger(app);
 
-app.listen(port,()=>{
-    console.log(`running on http://localhost:${port}`); 
-})
 //-----------------------------------------//
 const users = require('./routs/users');
 app.use('/users',users);
@@ -22,4 +19,8 @@ const measurements = require('./routs/measurements');
 app.use('/measurements',measurements);
 
 const pages = require('./routs/pages');
-app.use('/pages',pages);
+app.use('/',pages);
+
+app.listen(port,()=>{
+    console.log(`running on http://localhost:${port}`); 
+})
