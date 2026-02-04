@@ -43,6 +43,6 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             # משיכת הגרסה החדשה
-            docker compose pull
+            docker-compose pull
             # הרצה מחדש
-            docker compose up -d
+            docker-compose up -d
