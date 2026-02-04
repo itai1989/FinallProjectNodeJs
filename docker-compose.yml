@@ -5,7 +5,7 @@ services:
   api:
     image: itai1989/node-sql-app:latest
     ports:
-      - "3003:3000"
+      - "3003:5050"
     restart: always
     environment:
       - DB_HOST=mysql_db
